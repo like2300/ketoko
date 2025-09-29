@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pre-incription - Ketoko - Plateforme de Commerce Électronique Panafricaine</title>
     
-       <!-- Meta Tags SEO Optimisés -->
+    <!-- Meta Tags SEO Optimisés -->
     <meta name="description" content="Ketoko est la plateforme de commerce électronique panafricaine qui connecte vendeurs et acheteurs. Découvrez une expérience shopping simplifiée et fiable avec notre application mobile disponible sur Android et iOS.">
     <meta name="keywords" content="commerce électronique, e-commerce, acheter en ligne, vendre en ligne, plateforme africaine, Ketoko, application mobile, shopping en ligne">
     
@@ -194,7 +194,17 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script>
+        // Initialize Supabase client
+      
+        const supabaseUrl = process.env.SUPABASE_URL;
+        const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('registrationForm');
             const modal = document.getElementById('successModal');
@@ -204,10 +214,10 @@
             const socialLinks = document.querySelectorAll('.social-link');
             
             // Form submission handler
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                // Validate that either phone or email is filled (but not both necessarily)
+                // Validate that either phone or email is filled
                 const phoneValue = phoneInput.value.trim();
                 const emailValue = emailInput.value.trim();
                 
@@ -217,20 +227,63 @@
                 }
                 
                 // Get form data
-                const formData = new FormData(form);
+                const fullName = form.querySelector('input[type="text"]').value;
                 const userData = {
-                    name: formData.get('name') || form.querySelector('input[type="text"]').value,
-                    contact: phoneValue || emailValue
+                    fullname: fullName,
+                    phone: phoneValue || null,
+                    mail: emailValue || null
                 };
                 
-                console.log('Données soumises:', userData);
-                
-                // Show success modal
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                
-                // Reset form
-                form.reset();
+                try {
+                    // Test connection to Supabase
+                    console.log('Tentative de connexion à Supabase...');
+                    const testResponse = await supabase.from('userData').select('*').limit(1);
+                    
+                    if (testResponse.error) {
+                        console.error('Erreur de connexion à Supabase:', testResponse.error);
+                        throw new Error('Impossible de se connecter à la base de données');
+                    }
+                    
+                    console.log('Connexion à Supabase réussie');
+                    
+                    // Insert data into Supabase
+                    console.log('Envoi des données:', userData);
+                    const { data, error } = await supabase
+                        .from('userData')
+                        .insert([userData]);
+                        
+                    if (error) {
+                        console.error('Erreur détaillée lors de l\'insertion:', error);
+                        throw error;
+                    }
+                    
+                    console.log('Données enregistrées avec succès:', data);
+                    
+                    // Show success modal
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    
+                    // Reset form
+                    form.reset();
+                    
+                } catch (error) {
+                    console.error('Erreur complète:', error);
+                    
+                    // Afficher un message d'erreur plus détaillé
+                    let errorMessage = 'Une erreur est survenue lors de l\'inscription.';
+                    
+                    if (error.code === '42501') {
+                        errorMessage += ' Veuillez vérifier vos identifiants Supabase.';
+                    } else if (error.code === '42P01') {
+                        errorMessage += ' La table "userData" n\'existe pas.';
+                    } else if (error.code === '23502') {
+                        errorMessage += ' Un champ obligatoire est manquant.';
+                    } else if (error.code === '42883') {
+                        errorMessage += ' La colonne demandée n\'existe pas.';
+                    }
+                    
+                    alert(errorMessage);
+                }
             });
             
             // Close modal handler
@@ -279,7 +332,7 @@
             }
         });
     </script>
-    
+
     <!-- Font Awesome for social icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
 </body>
