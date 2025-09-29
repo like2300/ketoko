@@ -15,3 +15,12 @@
   
   <!-- Ajoutez d'autres pages importantes ici -->
 </urlset>
+
+<!-- <head>
+   ... autres méta tags ...  
+  
+   Lien vers le sitemap  
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="https://ketoko-app.netlify.app/sitemap.xml" />
+  
+   ... autres scripts ...  
+</head> -->
