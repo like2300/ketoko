@@ -110,7 +110,8 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"></noscript>
     
     <!-- CSS et JS -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=download" />
@@ -175,10 +176,15 @@
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HZG68D6FH6"></script>
     <script>
+        // Charger GTM après le chargement de la page
+        window.addEventListener('load', function() {
+        // Insérer le script GTM ici
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-HZG68D6FH6');
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-HZG68D6FH6');
+        });
+       
     </script>
 </head>
 
@@ -231,8 +237,9 @@
                 <!-- En-tête -->
                 <div class="flex justify-between items-center mb-6">
                     <div class="flex items-center space-x-4">
-                        <img src="./imgs/logo.jpg"  alt="Logo Ketoko" class="w-16 h-16 rounded-full logo-pulse">
-                        <h2 class="text-xl font-bold text-gray-800">Bientôt disponible </h2>
+                      <img src="./imgs/logo.jpg" alt="Logo Ketoko" 
+                          loading="lazy" class="w-16 h-16 rounded-full logo-pulse">
+                        <h2 class="text-xl font-bold text-gray-800">Bientôt disponible </h2>            
                     </div>
                     <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl focus:outline-none transition-colors duration-200">
                         &times;
