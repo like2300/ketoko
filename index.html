@@ -118,8 +118,12 @@
 
     <!-- Tailwind CSS avec fallback -->
     <script>
-    // Fallback CSS en attendant Tailwind
-    document.write('<style>.loading-fallback { visibility: hidden; }</style>');
+        // Fallback CSS sans document.write()
+        (function() {
+            var style = document.createElement('style');
+            style.textContent = '.loading-fallback { visibility: hidden; }';
+            document.head.appendChild(style);
+        })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
@@ -127,6 +131,23 @@
 
 
    <style>
+            /* Optimisation de l'image de fond */
+        .bg-optimized {
+            background-image: url('./imgs/bg.webp');
+            background-image: -webkit-image-set(
+                url('./imgs/bg.webp') 1x,
+                url('./imgs/bg.png') 1x
+            );
+            background-size: cover;
+            background-position: top;
+            background-repeat: no-repeat;
+        }
+        /* @media (max-width: 768px) {
+            .bg-optimized {
+                background-image: none;
+                background-color: #f0fdf4;
+            }
+        } */
         *,body {
             font-family: 'Poppins', sans-serif;
             font-display: swap;
@@ -205,7 +226,7 @@
 
 </head>
 
-<body class="h-full w-full flex flex-col items-center justify-center bg-[url('./imgs/bg.png')] bg-cover bg-top bg-no-repeat"> 
+<body class="h-full w-full flex flex-col items-center justify-center bg-green-50 bg-optimized">
 
 
     <!-- ============== header ============== -->
@@ -254,8 +275,9 @@
                 <!-- En-tête -->
                 <div class="flex justify-between items-center mb-6">
                     <div class="flex items-center space-x-4">
-                     <img src="./imgs/logo.webp" srcset="./imgs/logo.jpg" alt="Logo Ketoko" 
-                      loading="lazy" width="64" height="64" class="w-16 h-16 rounded-full logo-pulse">
+                     <!-- Dans la modal, remplacez l'image du logo par : -->
+                    <img src="./imgs/logo.webp" srcset="./imgs/logo.jpg" alt="Logo Ketoko" 
+                        loading="lazy" width="64" height="64" class="w-16 h-16 rounded-full logo-pulse">
                         <h2 class="text-xl font-bold text-gray-800">Bientôt disponible </h2>            
                     </div>
                     <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl focus:outline-none transition-colors duration-200">
@@ -552,6 +574,15 @@
                 closeModal();
             }
         });
+    </script>
+
+
+    <script>
+        // Optimisation du chargement de Tailwind
+        if ('connection' in navigator && navigator.connection.saveData) {
+            // Mode économie de données : charger uniquement le CSS critique
+            document.documentElement.classList.add('data-saver');
+        }
     </script>
 </body>
 </html>
