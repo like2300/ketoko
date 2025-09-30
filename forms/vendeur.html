@@ -256,6 +256,15 @@
                                         type="email" 
                                         placeholder="Adresse email"
                                         itemprop="email">
+
+                                    <select name="reseaux" id="reseaux" class="w-full  mt-4 px-4 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-500 focus:bg-white transition-all duration-300">
+                                        <option value="">comment vous nous avez decouvert ?</option>
+                                        <option value="facebook">Facebook</option>
+                                        <option value="instagram">Instagram</option>
+                                        <option value="tiktok">TikTok</option>
+                                        <option value="whatsapp">WhatsApp</option>
+                                    </select>
+
                                     <input
                                         id="type_user"
                                         class="w-full hidden px-4 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-500 focus:bg-white transition-all duration-300"
@@ -315,27 +324,27 @@
                     </p>
                     
                     <div class="flex justify-center space-x-4 mb-6">
-                        <a href="https://www.facebook.com/profile.php?id=61580551694187" class="social-link text-blue-600 hover:text-blue-800 transition-colors duration-300" 
+                        <a href="https://www.facebook.com/share/1LRVhExmqi/?mibextid=wwXIfr" class="social-link text-blue-600 hover:text-blue-800 transition-colors duration-300" 
                            aria-label="Suivez Ketoko sur Facebook" title="Page Facebook Ketoko">
                             <i class="fab fa-facebook-f text-xl"></i>
                         </a>
                        
-                        <a href="https://www.instagram.com/a.k.o_groupe" class="social-link text-pink-600 hover:text-pink-800 transition-colors duration-300" 
+                        <a href=https://www.instagram.com/_ketoko?igsh=c2dtNWkzNm4xamlu&utm_source=qr" class="social-link text-pink-600 hover:text-pink-800 transition-colors duration-300" 
                            aria-label="Suivez Ketoko sur Instagram" title="Compte Instagram Ketoko">  
                             <i class="fab fa-instagram text-xl"></i>
                         </a>
-                        <a href="https://www.tiktok.com/@a.k.o_groupe" class="social-link text-black hover:text-gray-800 transition-colors duration-300" 
+                        <a href="https://www.tiktok.com/@ketoko18?_t=ZM-909gsP3iLEa&_r=1" class="social-link text-black hover:text-gray-800 transition-colors duration-300" 
                            aria-label="Suivez Ketoko sur TikTok" title="Compte TikTok Ketoko">  
                             <i class="fab fa-tiktok text-xl"></i>
                         </a>
-                        <a href="https://www.whatsapp.com/send?phone=+242068601616" class="social-link text-green-600 hover:text-green-800 transition-colors duration-300" 
+                        <a href="https://wa.me/242068601616" class="social-link text-green-600 hover:text-green-800 transition-colors duration-300" 
                            aria-label="Contactez Ketoko sur WhatsApp" title="Contact WhatsApp Ketoko"> 
                             <i class="fab fa-whatsapp text-xl"></i>
                         </a>
                     </div>
                     
                     <button 
-                     onclick="window.location.href='https://www.tiktok.com/@a.k.o_groupe'"
+                     onclick="window.location.href='https://www.tiktok.com/@ketoko18?_t=ZM-909gsP3iLEa&_r=1'"
                      id="closeModal" class="w-full bg-green-800 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-300">
                         Fermer et continuer
                     </button>
@@ -377,6 +386,7 @@
             const type_user = document.getElementById('type_user');
             const adresse = document.getElementById('adresse');
             const societe = document.getElementById('societe');
+            const reseaux = document.getElementById('reseaux');
             
             // Form submission handler
             form.addEventListener('submit', async function(e) {
@@ -400,6 +410,7 @@
                     type_user: type_user.value   ,
                     adresse: adresse.value || null,
                     societe: societe.value || null,
+                    reseaux: reseaux.value || null,
 
                 };
                 
