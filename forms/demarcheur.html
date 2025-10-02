@@ -8,14 +8,14 @@
     <title>Pré-inscription Ketoko | Marketplace Panafricaine | Concours Exclusif</title>
     
     <!-- Meta Description optimisée -->
-    <meta name="description" content="Pré-inscrivez-vous sur Ketoko, la marketplace panafricaine, et participez à notre jeu concours exclusif. Soyez parmi les premiers à découvrir l'application révolutionnaire de e-commerce en Afrique.">
+    <meta name="description" content="Pré-inscrivez-vous sur Ketoko, la marketplace panafricaine, et participez à notre jeu concours exclusif. Soyez parmi les premiers à découvrir l'application révolutionnaire de E-commerce en Afrique.">
     
     <!-- Keywords optimisées -->
     <meta name="keywords" content="pré-inscription ketoko, inscription marketplace afrique, concours ketoko, ecommerce afrique, application ketoko, préinscription plateforme africaine">
     
     <!-- Open Graph optimisé -->
     <meta property="og:title" content="Pré-inscription Ketoko | Concours Marketplace Panafricaine">
-    <meta property="og:description" content="Pré-inscrivez-vous et participez au jeu concours exclusif Ketoko. Soyez parmi les premiers à utiliser l'application révolutionnaire de e-commerce en Afrique.">
+    <meta property="og:description" content="Pré-inscrivez-vous et participez au jeu concours exclusif Ketoko. Soyez parmi les premiers à utiliser l'application révolutionnaire de E-commerce en Afrique.">
     <meta property="og:image" content="http://ketoko.net/imgs/logo.jpg">
     <meta property="og:url" content="http://ketoko.net/inscription.html">
     <meta property="og:type" content="website">
@@ -79,7 +79,7 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site"  content="@ketoko">
     <meta name="twitter:title" content="Pré-inscription Ketoko | Concours Marketplace Panafricaine">
-    <meta name="twitter:description" content="Pré-inscrivez-vous et participez au jeu concours exclusif Ketoko. Soyez parmi les premiers à utiliser l'application révolutionnaire de e-commerce en Afrique.">
+    <meta name="twitter:description" content="Pré-inscrivez-vous et participez au jeu concours exclusif Ketoko. Soyez parmi les premiers à utiliser l'application révolutionnaire de E-commerce en Afrique.">
     <meta name="twitter:image" content="http://ketoko.net/imgs/logo.jpg">
     
     <!-- Préchargement des ressources -->
@@ -192,7 +192,7 @@
                     <div class="mt-12 flex flex-col justify-center h-screen items-center">
                         <h1 class="text-2xl xl:text-3xl font-extrabold text-center text-green-800" itemprop="headline">Pré-inscription Ketoko en temp que demarcheur </h1>
                         <p class="text-sm mt-4 text-center text-gray-600" itemprop="description">
-                           inscrivez vous a application de e-commerce la plus révolutionnaire en Afrique et participez a notre jeu concours exclusif.
+                           inscrivez vous a application de E-commerce la plus révolutionnaire en Afrique et participez a notre jeu concours exclusif.
                         </p>
                         
                         <form id="registrationForm" class="mt-8 w-full max-w-md" itemscope itemtype="https://schema.org/RegisterAction">
@@ -279,6 +279,7 @@
                                         type="text"  
                                         itemprop="type"
                                         value="demarcheur">
+                                    <input id="country" name="country" type="hidden" value="" itemprop="addressCountry">
                                 </div>
                                 
                                 <button
@@ -378,147 +379,131 @@
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <script>
-        // Initialize Supabase client
-        const supabaseUrl = 'https://godhvvxapbtghchfrcxz.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdvZGh2dnhhcGJ0Z2hjaGZyY3h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxMDEyMDgsImV4cCI6MjA3NDY3NzIwOH0.RK0-YEzLACd8BuCtmwfRNZEgNKlxD5pjQHCraqXANNs';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+      
+<script>
+  // Initialize Supabase client
+  const supabaseUrl = 'https://godhvvxapbtghchfrcxz.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdvZGh2dnhhcGJ0Z2hjaGZyY3h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxMDEyMDgsImV4cCI6MjA3NDY3NzIwOH0.RK0-YEzLACd8BuCtmwfRNZEgNKlxD5pjQHCraqXANNs';
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('registrationForm');
-            const modal = document.getElementById('successModal');
-            const closeModalBtn = document.getElementById('closeModal');
-            const phoneInput = document.getElementById('phoneInput');
-            const emailInput = document.getElementById('emailInput');
-            const socialLinks = document.querySelectorAll('.social-link');
-            const type_user = document.getElementById('type_user');
-            const adresse = document.getElementById('adresse');
-            const societe = document.getElementById('societe');
-            const reseaux = document.getElementById('reseaux');
-            
-            // Form submission handler
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                // Validate that either phone or email is filled
-                const phoneValue = phoneInput.value.trim();
-                const emailValue = emailInput.value.trim();
-                
-                if (!phoneValue && !emailValue) {
-                    alert('Veuillez entrer soit votre numéro de téléphone soit votre adresse email.');
-                    return;
-                }
-                
-                // Get form data
-                const fullName = form.querySelector('input[type="text"]').value;
-                const userData = {
-                    fullname: fullName,
-                    phone: phoneValue || null,
-                    mail: emailValue || null,
-                    type_user: type_user.value   ,
-                    adresse: adresse.value || null,
-                    societe: societe.value || null,
-                    reseaux: reseaux.value || null,
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registrationForm');
+    const modal = document.getElementById('successModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const phoneInput = document.getElementById('phoneInput');
+    const emailInput = document.getElementById('emailInput');
+    const countryInput = document.getElementById('country');
+    
+    // Optional: Country detection (with fallback)
+    async function detectCountry() {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        countryInput.value = data.country_name || 'Afrique';
+      } catch (err) {
+        console.warn('Impossible de détecter le pays, utilisation de la valeur par défaut.');
+        countryInput.value = 'Afrique';
+      }
+    }
+    
+    detectCountry(); // Call once on load
 
-                };
-                
-                try {
-                    // Test connection to Supabase
-                    console.log('Tentative de connexion à Supabase...');
-                    const testResponse = await supabase.from('userData').select('*').limit(1);
-                    
-                    if (testResponse.error) {
-                        console.error('Erreur de connexion à Supabase:', testResponse.error);
-                        throw new Error('Impossible de se connecter à la base de données');
-                    }
-                    
-                    console.log('Connexion à Supabase réussie');
-                    
-                    // Insert data into Supabase
-                    console.log('Envoi des données:', userData);
-                    const { data, error } = await supabase
-                        .from('userData')
-                        .insert([userData]);
-                        
-                    if (error) {
-                        console.error('Erreur détaillée lors de l\'insertion:', error);
-                        throw error;
-                    }
-                    
-                    console.log('Données enregistrées avec succès:', data);
-                    
-                    // Show success modal
-                    modal.classList.remove('hidden');
-                    modal.classList.add('flex');
-                    
-                    // Reset form
-                    form.reset();
-                    
-                } catch (error) {
-                    console.error('Erreur complète:', error);
-                    
-                    // Afficher un message d'erreur plus détaillé
-                    let errorMessage = 'Une erreur est survenue lors de l\'inscription.';
-                    
-                    if (error.code === '42501') {
-                        errorMessage += ' Veuillez vérifier vos identifiants Supabase.';
-                    } else if (error.code === '42P01') {
-                        errorMessage += ' La table "userData" n\'existe pas.';
-                    } else if (error.code === '23502') {
-                        errorMessage += ' Un champ obligatoire est manquant.';
-                    } else if (error.code === '42883') {
-                        errorMessage += ' La colonne demandée n\'existe pas.';
-                    }
-                    
-                    alert(errorMessage);
-                }
-            });
-            
-            // Close modal handler
-            closeModalBtn.addEventListener('click', function() {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            });
-            
-            // Social links click handlers
-            socialLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const platform = this.getAttribute('data-platform');
-                    
-                    // Show confetti effect
-                    showConfetti();
-                    
-                    // Add visual feedback
-                    this.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
-                });
-            });
-            
-            // Function to show confetti
-            function showConfetti() {
-                const container = document.getElementById('confettiContainer');
-                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-                
-                // Create multiple confetti pieces
-                for (let i = 0; i < 50; i++) {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.animationDelay = Math.random() * 3 + 's';
-                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                    container.appendChild(confetti);
-                    
-                    // Remove confetti after animation
-                    setTimeout(() => {
-                        confetti.remove();
-                    }, 5000);
-                }
-            }
-        });
-    </script>
+    // Form submission handler
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Validate required fields
+      const phoneValue = phoneInput.value.trim();
+      const emailValue = emailInput.value.trim();
+      const fullName = document.getElementById('fullName').value.trim(); // Use specific ID
+ 
+
+      const userData = {
+        fullname: fullName,
+        phone: phoneValue || null,
+        mail: emailValue || null,
+        type_user: document.getElementById('type_user').value,
+        adresse: document.getElementById('adresse').value || null,
+        societe: document.getElementById('societe').value || null,
+        reseaux: document.getElementById('reseaux').value || null,
+        country: countryInput.value || null,
+      };
+
+      try {
+        // Test connection to Supabase
+        const testResponse = await supabase.from('userData').select('*').limit(1);
+        
+        if (testResponse.error) {
+          console.error('Erreur de connexion à Supabase:', testResponse.error.message);
+          throw new Error('Impossible de se connecter à la base de données');
+        }
+        
+        // Insert data
+        const { data, error } = await supabase
+          .from('userData')
+          .insert([userData]);
+          
+        if (error) {
+          console.error('Erreur lors de l\'insertion:', error.message);
+          throw error;
+        }
+        
+        // Success feedback
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        form.reset();
+        
+      } catch (error) {
+        alert(`Erreur : ${error.message}`);
+      }
+    });
+    
+    // Utility functions
+    function isValidEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+    
+    function isValidPhone(phone) {
+      const re = /^[\d\s\+\-\(\)]{10,}$/; // Simplified phone regex
+      return re.test(phone.replace(/\s/g, '')); // Remove spaces for validation
+    }
+    
+    // Close modal handler
+    closeModalBtn.addEventListener('click', function() {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    });
+
+    // Social links click handlers
+    document.querySelectorAll('.social-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        showConfetti();
+        this.style.transform = 'scale(1.2)';
+        setTimeout(() => this.style.transform = 'scale(1)', 200);
+      });
+    });
+
+    // Confetti function
+    function showConfetti() {
+      const container = document.getElementById('confettiContainer');
+      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+      
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 3 + 's';
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        container.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+  });
+</script>
+
 </body>
 </html>
