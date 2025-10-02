@@ -16,14 +16,14 @@
     <!-- Open Graph optimisé -->
     <meta property="og:title" content="Pré-inscription Ketoko | Concours Marketplace Panafricaine">
     <meta property="og:description" content="Pré-inscrivez-vous et participez au jeu concours exclusif Ketoko. Soyez parmi les premiers à utiliser l'application révolutionnaire de e-commerce en Afrique.">
-    <meta property="og:image" content="https://ketoko-app.netlify.app/imgs/logo.jpg">
-    <meta property="og:url" content="https://ketoko-app.netlify.app/inscription.html">
+    <meta property="og:image" content="http://ketoko.net/imgs/logo.jpg">
+    <meta property="og:url" content="http://ketoko.net/inscription.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Ketoko">
     <meta property="og:locale" content="fr_FR">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://ketoko-app.netlify.app/inscription.html" />
+    <link rel="canonical" href="http://ketoko.net/inscription.html" />
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="57x57" href="./imgs/icons.ico/apple-icon-57x57.png">
@@ -57,16 +57,16 @@
         "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
         "location": {
             "@type": "VirtualLocation",
-            "url": "https://ketoko-app.netlify.app/inscription.html"
+            "url": "http://ketoko.net/inscription.html"
         },
         "organizer": {
             "@type": "Organization",
             "name": "Ketoko",
-            "url": "https://ketoko-app.netlify.app"
+            "url": "http://ketoko.net/"
         },
         "offers": {
             "@type": "Offer",
-            "url": "https://ketoko-app.netlify.app/inscription.html",
+            "url": "http://ketoko.net/inscription.html",
             "price": "0",
             "priceCurrency": "XAF",
             "availability": "https://schema.org/InStock",
@@ -80,7 +80,7 @@
     <meta name="twitter:site"  content="@ketoko">
     <meta name="twitter:title" content="Pré-inscription Ketoko | Concours Marketplace Panafricaine">
     <meta name="twitter:description" content="Pré-inscrivez-vous et participez au jeu concours exclusif Ketoko. Soyez parmi les premiers à utiliser l'application révolutionnaire de e-commerce en Afrique.">
-    <meta name="twitter:image" content="https://ketoko-app.netlify.app/imgs/logo.jpg">
+    <meta name="twitter:image" content="http://ketoko.net/imgs/logo.jpg">
     
     <!-- Préchargement des ressources -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -207,27 +207,33 @@
                                         required
                                         itemprop="name">
                                 </div>
-                                                                <div>
-                                    <label for="societe" class="sr-only">Nom de la société</label>
-                                    <input
-                                        id="societe"
-                                        class="w-full px-4 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-500 focus:bg-white transition-all duration-300"
-                                        type="text" 
-                                        placeholder="Nom de la société" 
-                                        required
-                                        itemprop="name">
-                                </div>
-                                 
-                                
-                                <div>
-                                    <label for="phoneInput" class="sr-only">Numéro de téléphone</label>
-                                    <input
-                                        id="phoneInput"
-                                        class="w-full px-4 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-500 focus:bg-white transition-all duration-300"
-                                        type="tel" 
-                                        placeholder="Numéro de téléphone"
-                                        pattern="[0-9]{9,15}"
-                                        title="Veuillez entrer un numéro de téléphone valide">
+                            
+                            
+                                  <div class="grid grid-cols-2 gap-4">
+
+                                    <div>
+                                        <label for="societe" class="sr-only">Nom de la société</label>
+                                        <input
+                                            id="societe"
+                                            class="w-full px-4 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-500 focus:bg-white transition-all duration-300"
+                                            type="text" 
+                                            placeholder="Nom de la société" 
+                                            required
+                                            itemprop="name">
+                                    </div>
+                                    
+                                    
+                                    <div>
+                                        <label for="phoneInput" class="sr-only">Numéro de téléphone</label>
+                                        <input
+                                            id="phoneInput"
+                                            class="w-full px-4 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-500 focus:bg-white transition-all duration-300"
+                                            type="tel" 
+                                            placeholder="Numéro de téléphone"
+                                            pattern="[0-9]{9,15}"
+                                            title="Veuillez entrer un numéro de téléphone valide">
+                                    </div>
+
                                 </div>
 
                                  <div>
@@ -237,7 +243,7 @@
                                         class="w-full px-4 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-500 focus:bg-white transition-all duration-300"
                                         type="text"
                                         placeholder="Adresse"
-                                        
+                                        required
                                         title="Veuillez entrer une adresse valide">
                                 </div>
                                  
@@ -257,12 +263,14 @@
                                         placeholder="Adresse email"
                                         itemprop="email">
 
-                                    <select name="reseaux" id="reseaux" class="w-full  mt-4 px-4 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-500 focus:bg-white transition-all duration-300">
+                                  <select  name="reseaux" id="reseaux" class="w-full  mt-4 px-4 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 
+                                    text-sm focus:outline-none focus:border-green-500 focus:bg-white transition-all duration-300" required>
                                         <option value="">comment vous nous avez decouvert ?</option>
                                         <option value="facebook">Facebook</option>
                                         <option value="instagram">Instagram</option>
                                         <option value="tiktok">TikTok</option>
                                         <option value="whatsapp">WhatsApp</option>
+                                        <option value="other">Autre</option>
                                     </select>
 
                                     <input
