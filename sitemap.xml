@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
-    <loc>https://ketoko.net/</loc>
+    <loc>https://ketoko.net//</loc>
     <lastmod>2025-05-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://ketoko.net/forms/acheteur.html</loc>
+    <loc>https://ketoko.net//forms/acheteur.html</loc>
     <lastmod>2025-05-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ketoko.net/forms/vendeur.html</loc>
+    <loc>https://ketoko.net//forms/vendeur.html</loc>
     <lastmod>2025-05-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ketoko.net/demarcheur.html</loc>
+    <loc>https://ketoko.net//demarcheur.html</loc>
     <lastmod>2025-05-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -31,7 +31,7 @@
    ... autres méta tags ...  
   
    Lien vers le sitemap  
-  <link rel="sitemap" type="application/xml" title="Sitemap" href="https://ketoko.net/sitemap.xml" />
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="https://ketoko.net//sitemap.xml" />
   
    ... autres scripts ...  
 </head> -->
