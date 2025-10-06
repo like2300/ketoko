@@ -1,1 +1,1202 @@
-e
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Administration</title>
+
+    <!-- CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+
+        body {
+            background-color: #ecf0f1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+        }
+
+        .stat-card .card-body {
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        .stat-card h5 {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h3 {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        .btn {
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), #2980b9);
+            border: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #219652);
+            border: none;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            border: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+            border: none;
+        }
+
+        .table-responsive {
+            border-radius: 10px;
+        }
+
+        #userTable tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        #userTable tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .badge {
+            font-weight: 500;
+            padding: 5px 10px;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        /* Styles pour les popups */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(2px);
+        }
+
+        .popup-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .popup-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+            transition: color 0.3s ease;
+        }
+
+        .popup-close:hover {
+            color: var(--danger-color);
+        }
+
+        .duplicate-item {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .duplicate-field {
+            color: var(--warning-color);
+            font-weight: 600;
+        }
+
+        /* Styles pour l'authentification */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .login-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .dashboard-content {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-bottom: 20px;
+                position: static;
+            }
+            
+            .popup-content {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Écran d'authentification -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="text-center mb-4">
+                <i class="bi bi-shield-lock display-4 text-primary mb-3"></i>
+                <h2 class="fw-bold">Tableau de Bord Admin</h2>
+                <p class="text-muted">Veuillez vous authentifier</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nom d'utilisateur</label>
+                    <input type="text" class="form-control" id="username" placeholder="Entrez votre nom d'utilisateur" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <input type="password" class="form-control" id="password" placeholder="Entrez votre mot de passe" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                </button>
+            </form>
+            
+            <div id="loginError" class="alert alert-danger mt-3" style="display: none;">
+                <i class="bi bi-exclamation-triangle me-2"></i>Identifiants incorrects
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenu principal du dashboard (caché par défaut) -->
+    <div id="dashboardContent" class="dashboard-content">
+
+        <!-- Popup Overlay -->
+        <div class="popup-overlay" id="popupOverlay">
+            <div class="popup-content">
+                <div class="popup-header">
+                    <h4 id="popupTitle">Titre du Popup</h4>
+                    <button class="popup-close" id="popupClose">&times;</button>
+                </div>
+                <div id="popupBody">
+                    <!-- Contenu du popup sera injecté ici -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Alert -->
+        <div id="notificationAlert" class="alert alert-dismissible fade show position-fixed" 
+             style="top: 20px; right: 20px; z-index: 1050; min-width: 300px; display: none;">
+            <span id="alertMessage"></span>
+            <button type="button" class="btn-close" onclick="hideNotification()"></button>
+        </div>
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-dark navbar-expand-lg">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1 fw-bold">
+                    <i class="bi bi-speedometer2 me-2"></i>Tableau de Bord Administration
+                </span>
+                <div class="navbar-nav ms-auto">
+                    <span class="nav-link text-light">
+                        <i class="bi bi-person-circle me-2"></i>Connecté en tant qu'admin
+                    </span>
+                    <button class="btn btn-outline-light btn-sm ms-3" onclick="logout()">
+                        <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid mt-4">
+            <div class="row">
+                <!-- Colonne de Contrôle -->
+                <div class="col-lg-3 col-md-4">
+                    <div class="sidebar card">
+                        <div class="card-header">
+                            <i class="bi bi-funnel me-2"></i> Filtres et Actions
+                        </div>
+                        <div class="card-body">
+                            <!-- Section Chargement -->
+                            <div class="filter-section">
+                                <h6 class="section-title">Chargement des données</h6>
+                                <button id="loadDataBtn" class="btn btn-primary w-100 mb-3">
+                                    <i class="bi bi-cloud-download me-2"></i> Charger les données
+                                </button>
+                                <div class="loading-spinner" id="loadingSpinner">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Chargement...</span>
+                                    </div>
+                                    <p class="mt-2">Chargement en cours...</p>
+                                </div>
+                            </div>
+
+                            <!-- Section Recherche -->
+                            <div class="filter-section">
+                                <h6 class="section-title">Recherche</h6>
+                                <div class="mb-3">
+                                    <label for="searchInput" class="form-label">Recherche rapide</label>
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Nom, Email, Société, Réseaux...">
+                                </div>
+                            </div>
+
+                            <!-- Section Filtres -->
+                            <div class="filter-section">
+                                <h6 class="section-title">Filtres</h6>
+                                <div class="mb-3">
+                                    <label for="daterange" class="form-label">Filtrer par date de création</label>
+                                    <input type="text" id="daterange" class="form-control" />
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="countryFilter" class="form-label">Filtrer par pays</label>
+                                    <select class="form-select" id="countryFilter">
+                                        <option value="">Tous les pays</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="typeFilter" class="form-label">Filtrer par type</label>
+                                    <select class="form-select" id="typeFilter">
+                                        <option value="">Tous les types</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="reseauFilter" class="form-label">Filtrer par réseau</label>
+                                    <select class="form-select" id="reseauFilter">
+                                        <option value="">Tous les réseaux</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Section Export -->
+                            <div class="filter-section">
+                                <h6 class="section-title">Export des données</h6>
+                                <button id="exportExcelBtn" class="btn btn-success w-100 mb-2">
+                                    <i class="bi bi-file-earmark-excel me-2"></i> Exporter en Excel
+                                </button>
+                                <button style="visibility: hidden;" id="generatePdfBtn" class="btn  btn-danger w-100 mb-2">
+                                    <i class="bi bi-file-earmark-pdf me-2"></i> Générer un rapport PDF
+                                </button>
+                            </div>
+                            
+                            <!-- Section Administration -->
+                            <div class="filter-section">
+                                <h6 class="section-title">Administration</h6>
+                                <button id="showDuplicatesBtn" class="btn btn-warning w-100 mb-2">
+                                    <i class="bi bi-exclamation-triangle me-2"></i> Détecter les doublons
+                                </button>
+                                <button id="showAllDataBtn" class="btn btn-info w-100 mb-2">
+                                    <i class="bi bi-eye me-2"></i> Afficher toutes les données
+                                </button>
+                                <button id="resetFiltersBtn" class="btn btn-outline-secondary w-100">
+                                    <i class="bi bi-arrow-clockwise me-2"></i> Réinitialiser les filtres
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colonne d'Affichage Principal -->
+                <div class="col-lg-9 col-md-8">
+                    <!-- Cartes de Statistiques -->
+                    <div class="row mb-4">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stat-card text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-people-fill display-6 text-primary mb-3"></i>
+                                    <h5>Total Utilisateurs</h5>
+                                    <h3 id="totalUsers">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stat-card text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-person-plus display-6 text-success mb-3"></i>
+                                    <h5>Nouveaux (30 derniers jours)</h5>
+                                    <h3 id="newUsers">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stat-card text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-globe display-6 text-warning mb-3"></i>
+                                    <h5>Pays le plus représenté</h5>
+                                    <h3 id="topCountry">-</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card stat-card text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-person-badge display-6 text-info mb-3"></i>
+                                    <h5>Type d'utilisateur principal</h5>
+                                    <h3 id="topUserType">-</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Graphique -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="bi bi-bar-chart me-2"></i> Répartition des utilisateurs par pays
+                        </div>
+                        <div class="card-body">
+                            <canvas id="userChart" height="150"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Tableau de données -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="bi bi-table me-2"></i> Liste des Utilisateurs
+                                <span class="badge bg-warning ms-2" id="duplicateBadge" style="display: none;">
+                                    Mode doublons actif
+                                </span>
+                            </div>
+                            <span class="badge bg-primary" id="tableCount">0 utilisateurs</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="userTable" class="table table-hover" style="width:100%">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nom Complet</th>
+                                            <th>Email</th>
+                                            <th>Téléphone</th>
+                                            <th>Société</th>
+                                            <th>Pays</th>
+                                            <th>Type</th>
+                                            <th>Réseaux</th>
+                                            <th>Date de création</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Les données seront injectées ici par JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        // Configuration d'authentification
+        const ADMIN_USERNAME = 'Adminketoko';
+        const ADMIN_PASSWORD = 'brazzaville0!';
+        const AUTH_KEY = 'admin_authenticated';
+
+        // Initialisation Supabase
+        const { jsPDF } = window.jspdf;
+        const supabaseUrl = 'https://godhvvxapbtghchfrcxz.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdvZGh2dnhhcGJ0Z2hjaGZyY3h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxMDEyMDgsImV4cCI6MjA3NDY3NzIwOH0.RK0-YEzLACd8BuCtmwfRNZEgNKlxD5pjQHCraqXANNs';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Variables globales
+        let allUserData = [];
+        let filteredUserData = [];
+        let dataTable;
+        let userChart;
+        let isDuplicateMode = false;
+        let duplicateStats = {
+            total: 0,
+            byEmail: 0,
+            byPhone: 0
+        };
+
+        // Vérification de l'authentification au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthentication();
+        });
+
+        // Fonctions d'authentification
+        function checkAuthentication() {
+            const isAuthenticated = localStorage.getItem(AUTH_KEY) === 'true';
+            if (isAuthenticated) {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('dashboardContent').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+            
+            // Initialiser les composants du dashboard
+            initializeDateRangePicker();
+            initializeChart();
+            setupEventListeners();
+            initializePopupSystem();
+        }
+
+        function logout() {
+            localStorage.removeItem(AUTH_KEY);
+            showLogin();
+        }
+
+        // Gestion du formulaire de connexion
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                localStorage.setItem(AUTH_KEY, 'true');
+                showDashboard();
+            } else {
+                errorDiv.style.display = 'block';
+                // Masquer l'erreur après 3 secondes
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        // Initialisation des événements du dashboard
+        function setupEventListeners() {
+            document.getElementById('loadDataBtn').addEventListener('click', fetchUserData);
+            document.getElementById('searchInput').addEventListener('keyup', applyFilters);
+            document.getElementById('exportExcelBtn').addEventListener('click', () => dataTable.button(0).trigger());
+            document.getElementById('generatePdfBtn').addEventListener('click', generatePdfReport);
+            document.getElementById('showDuplicatesBtn').addEventListener('click', showDuplicateAnalysis);
+            document.getElementById('showAllDataBtn').addEventListener('click', showAllData);
+            document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+            document.getElementById('countryFilter').addEventListener('change', applyFilters);
+            document.getElementById('typeFilter').addEventListener('change', applyFilters);
+            document.getElementById('reseauFilter').addEventListener('change', applyFilters);
+        }
+
+        function initializePopupSystem() {
+            const popupOverlay = document.getElementById('popupOverlay');
+            const popupClose = document.getElementById('popupClose');
+            
+            popupClose.addEventListener('click', () => {
+                popupOverlay.style.display = 'none';
+            });
+            
+            popupOverlay.addEventListener('click', (e) => {
+                if (e.target === popupOverlay) {
+                    popupOverlay.style.display = 'none';
+                }
+            });
+        }
+
+        function showPopup(title, content) {
+            document.getElementById('popupTitle').textContent = title;
+            document.getElementById('popupBody').innerHTML = content;
+            document.getElementById('popupOverlay').style.display = 'block';
+        }
+
+        // --- Fonctions de récupération et de traitement des données ---
+
+        async function fetchUserData() {
+            showLoading(true);
+            
+            try {
+                const { data, error } = await supabase
+                    .from('userData')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    throw new Error(`Erreur Supabase: ${error.message}`);
+                }
+                
+                allUserData = data || [];
+                
+                // Appliquer le filtrage des doublons par défaut
+                filterDuplicatesAutomatically();
+                
+                updateDashboard();
+                updateFilterOptions();
+                showNotification('Données chargées avec succès !', 'success');
+                
+                // Afficher un popup d'analyse des doublons si des doublons sont détectés
+                if (duplicateStats.total > 0) {
+                    showDuplicateAnalysisPopup();
+                }
+                
+            } catch (error) {
+                console.error('Erreur de récupération des données:', error);
+                showNotification('Erreur lors du chargement des données: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function filterDuplicatesAutomatically() {
+            const uniqueUsers = new Map();
+            const duplicateUsers = [];
+            
+            // Réinitialiser les statistiques
+            duplicateStats = { total: 0, byEmail: 0, byPhone: 0 };
+            
+            allUserData.forEach(user => {
+                // Utiliser l'email comme clé principale pour l'unicité
+                const key = user.mail?.toLowerCase().trim() || user.phone || user.id;
+                
+                if (!uniqueUsers.has(key)) {
+                    uniqueUsers.set(key, user);
+                } else {
+                    duplicateUsers.push(user);
+                    duplicateStats.total++;
+                    
+                    if (user.mail) duplicateStats.byEmail++;
+                    if (user.phone) duplicateStats.byPhone++;
+                }
+            });
+            
+            // Utiliser seulement les utilisateurs uniques par défaut
+            filteredUserData = Array.from(uniqueUsers.values());
+            isDuplicateMode = false;
+            updateDuplicateBadge();
+        }
+
+        function showDuplicateAnalysis() {
+            const duplicateUsers = findDetailedDuplicates();
+            
+            if (duplicateUsers.length === 0) {
+                showNotification("Aucun doublon trouvé dans les données.", 'info');
+                return;
+            }
+            
+            // Afficher les doublons
+            filteredUserData = duplicateUsers;
+            isDuplicateMode = true;
+            updateDuplicateBadge();
+            updateDashboard();
+            
+            showNotification(`${duplicateUsers.length} doublons trouvés et affichés.`, 'warning');
+        }
+
+        function findDetailedDuplicates() {
+            const emailMap = new Map();
+            const phoneMap = new Map();
+            const duplicateIds = new Set();
+            const duplicateDetails = [];
+
+            allUserData.forEach(user => {
+                // Vérification des doublons par email
+                if (user.mail) {
+                    const emailKey = user.mail.toLowerCase().trim();
+                    if (emailMap.has(emailKey)) {
+                        duplicateIds.add(user.id);
+                        duplicateIds.add(emailMap.get(emailKey));
+                    } else {
+                        emailMap.set(emailKey, user.id);
+                    }
+                }
+                
+                // Vérification des doublons par téléphone
+                if (user.phone) {
+                    const phoneKey = user.phone.trim();
+                    if (phoneMap.has(phoneKey)) {
+                        duplicateIds.add(user.id);
+                        duplicateIds.add(phoneMap.get(phoneKey));
+                    } else {
+                        phoneMap.set(phoneKey, user.id);
+                    }
+                }
+            });
+
+            // Récupérer tous les utilisateurs en double
+            return allUserData.filter(user => duplicateIds.has(user.id));
+        }
+
+        function showAllData() {
+            filteredUserData = [...allUserData];
+            isDuplicateMode = false;
+            updateDuplicateBadge();
+            updateDashboard();
+            showNotification('Toutes les données sont maintenant affichées.', 'info');
+        }
+
+        function showDuplicateAnalysisPopup() {
+            const content = `
+                <div class="alert alert-warning">
+                    <h6><i class="bi bi-exclamation-triangle me-2"></i>Doublons détectés</h6>
+                    <p>Nous avons identifié des utilisateurs potentiellement en double dans votre base de données :</p>
+                    <ul>
+                        <li><strong>${duplicateStats.total}</strong> doublons totaux détectés</li>
+                        <li><strong>${duplicateStats.byEmail}</strong> par adresse email</li>
+                        <li><strong>${duplicateStats.byPhone}</strong> par numéro de téléphone</li>
+                    </ul>
+                    <p class="mb-0">Par défaut, nous affichons seulement un utilisateur unique par adresse email/téléphone. Utilisez le bouton "Détecter les doublons" pour voir tous les doublons.</p>
+                </div>
+                <div class="text-center mt-3">
+                    <button class="btn btn-warning me-2" onclick="showDuplicateAnalysis(); document.getElementById('popupOverlay').style.display='none'">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Voir les doublons
+                    </button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('popupOverlay').style.display='none'">
+                        Continuer avec les données uniques
+                    </button>
+                </div>
+            `;
+            
+            showPopup('Analyse des doublons', content);
+        }
+
+        function updateDuplicateBadge() {
+            const badge = document.getElementById('duplicateBadge');
+            if (isDuplicateMode) {
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const dateRange = $('#daterange').data('daterangepicker');
+            const startDate = dateRange.startDate.toISOString();
+            const endDate = dateRange.endDate.toISOString();
+            const selectedCountry = document.getElementById('countryFilter').value;
+            const selectedType = document.getElementById('typeFilter').value;
+            const selectedReseau = document.getElementById('reseauFilter').value;
+
+            // Utiliser allUserData ou filteredUserData selon le mode
+            const baseData = isDuplicateMode ? allUserData : filteredUserData;
+
+            filteredUserData = baseData.filter(user => {
+                const matchesSearch = !searchTerm || 
+                    (user.fullname && user.fullname.toLowerCase().includes(searchTerm)) ||
+                    (user.mail && user.mail.toLowerCase().includes(searchTerm)) ||
+                    (user.societe && user.societe.toLowerCase().includes(searchTerm)) ||
+                    (user.reseaux && user.reseaux.toLowerCase().includes(searchTerm));
+                
+                const createdAtDate = new Date(user.created_at).toISOString();
+                const matchesDate = createdAtDate >= startDate && createdAtDate <= endDate;
+                const matchesCountry = !selectedCountry || user.country === selectedCountry;
+                const matchesType = !selectedType || user.type_user === selectedType;
+                const matchesReseau = !selectedReseau || (user.reseaux && user.reseaux === selectedReseau);
+
+                return matchesSearch && matchesDate && matchesCountry && matchesType && matchesReseau;
+            });
+
+            updateDashboard();
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('countryFilter').value = '';
+            document.getElementById('typeFilter').value = '';
+            document.getElementById('reseauFilter').value = '';
+            
+            const start = moment().subtract(29, 'days');
+            const end = moment();
+            $('#daterange').data('daterangepicker').setStartDate(start);
+            $('#daterange').data('daterangepicker').setEndDate(end);
+            
+            // Réappliquer le filtrage des doublons par défaut
+            if (!isDuplicateMode) {
+                filterDuplicatesAutomatically();
+            }
+            
+            applyFilters();
+            showNotification('Filtres réinitialisés', 'info');
+        }
+
+        // --- Fonctions de mise à jour de l'interface ---
+
+        function updateDashboard() {
+            updateStatistics();
+            updateChart();
+            updateDataTable();
+            updateTableCount();
+        }
+
+        function updateStatistics() {
+            document.getElementById('totalUsers').textContent = filteredUserData.length.toLocaleString();
+            
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            const newUsersCount = filteredUserData.filter(user => new Date(user.created_at) >= thirtyDaysAgo).length;
+            document.getElementById('newUsers').textContent = newUsersCount.toLocaleString();
+
+            const countryCounts = {};
+            filteredUserData.forEach(user => {
+                if (user.country) {
+                    countryCounts[user.country] = (countryCounts[user.country] || 0) + 1;
+                }
+            });
+            const topCountry = Object.keys(countryCounts).length > 0 ? 
+                Object.keys(countryCounts).reduce((a, b) => countryCounts[a] > countryCounts[b] ? a : b) : '-';
+            document.getElementById('topCountry').textContent = topCountry;
+
+            const typeCounts = {};
+            filteredUserData.forEach(user => {
+                if (user.type_user) {
+                    typeCounts[user.type_user] = (typeCounts[user.type_user] || 0) + 1;
+                }
+            });
+            const topType = Object.keys(typeCounts).length > 0 ? 
+                Object.keys(typeCounts).reduce((a, b) => typeCounts[a] > typeCounts[b] ? a : b) : '-';
+            document.getElementById('topUserType').textContent = topType;
+        }
+
+        function updateChart() {
+            const countryCounts = {};
+            filteredUserData.forEach(user => {
+                if (user.country) {
+                    countryCounts[user.country] = (countryCounts[user.country] || 0) + 1;
+                }
+            });
+
+            const sortedCountries = Object.entries(countryCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+
+            const labels = sortedCountries.map(item => item[0]);
+            const data = sortedCountries.map(item => item[1]);
+
+            userChart.data.labels = labels;
+            userChart.data.datasets[0].data = data;
+            userChart.update();
+        }
+
+        function updateDataTable() {
+            if (dataTable) {
+                dataTable.clear();
+                dataTable.rows.add(filteredUserData);
+                dataTable.draw();
+            } else {
+                dataTable = $('#userTable').DataTable({
+                    data: filteredUserData,
+                    columns: [
+                        { data: 'id' },
+                        { data: 'fullname' },
+                        { data: 'mail' },
+                        { data: 'phone' },
+                        { data: 'societe' },
+                        { data: 'country' },
+                        { data: 'type_user' },
+                        { data: 'reseaux' },
+                        { 
+                            data: 'created_at',
+                            render: function(data) {
+                                return new Date(data).toLocaleString('fr-FR');
+                            }
+                        }
+                    ],
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="bi bi-file-earmark-excel me-2"></i>Exporter en Excel',
+                            className: 'btn btn-success',
+                            title: 'Utilisateurs'
+                        }
+                    ],
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json"
+                    },
+                    pageLength: 25,
+                    responsive: true,
+                    order: [[0, 'desc']]
+                });
+            }
+        }
+
+        function updateTableCount() {
+            const count = filteredUserData.length;
+            document.getElementById('tableCount').textContent = `${count} utilisateur${count !== 1 ? 's' : ''}`;
+        }
+
+        function updateFilterOptions() {
+            // Mettre à jour les options de filtre de pays
+            const countries = [...new Set(allUserData.map(user => user.country).filter(Boolean))].sort();
+            const countrySelect = document.getElementById('countryFilter');
+            
+            countrySelect.innerHTML = '<option value="">Tous les pays</option>';
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                countrySelect.appendChild(option);
+            });
+
+            // Mettre à jour les options de filtre de type
+            const types = [...new Set(allUserData.map(user => user.type_user).filter(Boolean))].sort();
+            const typeSelect = document.getElementById('typeFilter');
+            
+            typeSelect.innerHTML = '<option value="">Tous les types</option>';
+            types.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                typeSelect.appendChild(option);
+            });
+
+            // Mettre à jour les options de filtre de réseaux
+            const reseaux = [...new Set(allUserData.map(user => user.reseaux).filter(Boolean))].sort();
+            const reseauSelect = document.getElementById('reseauFilter');
+            
+            reseauSelect.innerHTML = '<option value="">Tous les réseaux</option>';
+            reseaux.forEach(reseau => {
+                const option = document.createElement('option');
+                option.value = reseau;
+                option.textContent = reseau;
+                reseauSelect.appendChild(option);
+            });
+        }
+
+        // --- Fonctions d'initialisation des plugins ---
+
+        function initializeDateRangePicker() {
+            const start = moment().subtract(29, 'days');
+            const end = moment();
+
+            $('#daterange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    separator: ' - ',
+                    applyLabel: 'Appliquer',
+                    cancelLabel: 'Annuler',
+                    fromLabel: 'De',
+                    toLabel: 'à',
+                    customRangeLabel: 'Personnalisé',
+                    weekLabel: 'S',
+                    daysOfWeek: ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'],
+                    monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                    firstDay: 1
+                },
+                ranges: {
+                    'Aujourd\'hui': [moment(), moment()],
+                    'Hier': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Les 7 derniers jours': [moment().subtract(6, 'days'), moment()],
+                    'Les 30 derniers jours': [moment().subtract(29, 'days'), moment()],
+                    'Ce mois-ci': [moment().startOf('month'), moment().endOf('month')],
+                    'Le mois dernier': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, applyFilters);
+        }
+
+        function initializeChart() {
+            const ctx = document.getElementById('userChart').getContext('2d');
+            userChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Nombre d\'utilisateurs',
+                        data: [],
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Fonctions d'export PDF améliorées ---
+
+        function generatePdfReport() {
+            if (filteredUserData.length === 0) {
+                showNotification("Aucune donnée à exporter. Veuillez d'abord charger les données.", 'warning');
+                return;
+            }
+
+            showNotification("Génération du PDF en cours...", 'info');
+
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 15;
+            let yPosition = margin;
+
+            // Titre
+            pdf.setFontSize(20);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Rapport des Utilisateurs', pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 10;
+
+            // Date de génération
+            pdf.setFontSize(10);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`Généré le ${new Date().toLocaleString('fr-FR')}`, pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 10;
+
+            // Statistiques
+            if (isDuplicateMode) {
+                pdf.setFontSize(12);
+                pdf.setTextColor(255, 0, 0);
+                pdf.text('⚠️ RAPPORT DES DOUBLONS', margin, yPosition);
+                pdf.setTextColor(0, 0, 0);
+                yPosition += 7;
+            }
+
+            pdf.setFontSize(10);
+            pdf.text(`Total utilisateurs: ${filteredUserData.length}`, margin, yPosition);
+            yPosition += 5;
+            pdf.text(`Pays principal: ${document.getElementById('topCountry').textContent}`, margin, yPosition);
+            yPosition += 5;
+            pdf.text(`Type principal: ${document.getElementById('topUserType').textContent}`, margin, yPosition);
+            yPosition += 10;
+
+            // En-têtes du tableau (ajout de la colonne réseaux)
+            const headers = ['ID', 'Nom', 'Email', 'Téléphone', 'Société', 'Pays', 'Réseaux'];
+            const columnWidths = [15, 30, 40, 30, 30, 20, 25];
+            let xPosition = margin;
+
+            pdf.setFillColor(52, 152, 219);
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFont('helvetica', 'bold');
+            
+            headers.forEach((header, index) => {
+                pdf.rect(xPosition, yPosition, columnWidths[index], 8, 'F');
+                pdf.text(header, xPosition + 2, yPosition + 5);
+                xPosition += columnWidths[index];
+            });
+
+            yPosition += 8;
+            xPosition = margin;
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFont('helvetica', 'normal');
+
+            // Données du tableau
+            filteredUserData.forEach((user, index) => {
+                if (yPosition > pageHeight - 20) {
+                    pdf.addPage();
+                    yPosition = margin;
+                    
+                    // Redessiner les en-têtes sur la nouvelle page
+                    pdf.setFillColor(52, 152, 219);
+                    pdf.setTextColor(255, 255, 255);
+                    pdf.setFont('helvetica', 'bold');
+                    xPosition = margin;
+                    headers.forEach((header, idx) => {
+                        pdf.rect(xPosition, yPosition, columnWidths[idx], 8, 'F');
+                        pdf.text(header, xPosition + 2, yPosition + 5);
+                        xPosition += columnWidths[idx];
+                    });
+                    yPosition += 8;
+                    xPosition = margin;
+                    pdf.setTextColor(0, 0, 0);
+                    pdf.setFont('helvetica', 'normal');
+                }
+
+                const rowData = [
+                    user.id.toString(),
+                    user.fullname || '-',
+                    user.mail || '-',
+                    user.phone || '-',
+                    user.societe || '-',
+                    user.country || '-',
+                    user.reseaux || '-'
+                ];
+
+                rowData.forEach((data, colIndex) => {
+                    // Tronquer les textes trop longs
+                    const text = data.length > 20 ? data.substring(0, 17) + '...' : data;
+                    pdf.text(text, xPosition + 2, yPosition + 5);
+                    xPosition += columnWidths[colIndex];
+                });
+
+                yPosition += 6;
+                xPosition = margin;
+
+                // Ligne séparatrice
+                if (index < filteredUserData.length - 1) {
+                    pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+                    yPosition += 2;
+                }
+            });
+
+            // Nom du fichier avec timestamp
+            const timestamp = moment().format('YYYY-MM-DD_HH-mm');
+            const filename = isDuplicateMode ? 
+                `rapport_doublons_utilisateurs_${timestamp}.pdf` : 
+                `rapport_utilisateurs_${timestamp}.pdf`;
+            
+            pdf.save(filename);
+            showNotification('PDF généré avec succès!', 'success');
+        }
+
+        // --- Fonctions utilitaires ---
+
+        function showLoading(show) {
+            document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+            document.getElementById('loadDataBtn').style.display = show ? 'none' : 'block';
+        }
+
+        function showNotification(message, type = 'info') {
+            const alert = document.getElementById('notificationAlert');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            // Classes Bootstrap pour les types d'alertes
+            const alertClasses = {
+                'success': 'alert-success',
+                'danger': 'alert-danger',
+                'warning': 'alert-warning',
+                'info': 'alert-info'
+            };
+            
+            alert.className = `alert alert-dismissible fade show position-fixed ${alertClasses[type] || 'alert-info'}`;
+            alertMessage.textContent = message;
+            alert.style.display = 'block';
+            
+            // Masquer automatiquement après 5 secondes
+            setTimeout(hideNotification, 5000);
+        }
+
+        function hideNotification() {
+            document.getElementById('notificationAlert').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
